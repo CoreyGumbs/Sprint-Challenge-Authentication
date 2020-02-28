@@ -42,9 +42,15 @@ describe("API/AUTH: POST /REGISTER", () =>{
             expect(res.status).toBe(201);
         });
 
+        it("should return json formatted body", async () => {
+            const res = await request(server).post('/api/auth/register').send(data)
+            
+            expect(res.type).toMatch(/json/);
+        });
+
     });
 });
-
+ 
 
 describe("API/AUTH: POST /LOGIN", () => {
     describe("POST login user", () => {
