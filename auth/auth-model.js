@@ -17,6 +17,7 @@ function find(){
     .select('id', 'username', 'password');
 }
 
+
 module.exports = {
     register,
     findBy,

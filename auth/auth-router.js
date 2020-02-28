@@ -1,9 +1,10 @@
 const bcrypt = require('bcryptjs');
 const Users = require('./auth-model');
-
+const generateToken = require('./auth-token');
 const router = require('express').Router();
 
 router.get('/', (req, res) => {
+  console.log(req.session);
   Users.find()
   .then(user => {
     res.status(200).json(user);
@@ -24,8 +25,6 @@ router.post('/register', (req, res) => {
 
   Users.register(user)
   .then(user => {
-    req.session.logged = true;
-    req.session.user = user;
 
     res.status(201).json(user);
   })
@@ -36,7 +35,21 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  // implement login
+  const {username, password} = req.body;
+
+  Users.findBy({username})
+  .first()
+  .then(user => {
+    if(user && bcrypt.compareSync(password, user.password)){
+      const token = generateToken(user);
+
+      res.status(200).json({message: {
+        user: `Welcome ${user.username}`,
+        pass: `${user.password}`,
+        token
+      }});
+    }
+  })
 });
 
 module.exports = router;
