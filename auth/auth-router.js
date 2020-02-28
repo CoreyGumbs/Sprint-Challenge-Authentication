@@ -25,7 +25,7 @@ router.post('/register', (req, res) => {
 
   Users.register(user)
   .then(user => {
-
+    req.loggedIn = true;
     res.status(201).json(user);
   })
   .catch(error => {
@@ -42,14 +42,15 @@ router.post('/login', (req, res) => {
   .then(user => {
     if(user && bcrypt.compareSync(password, user.password)){
       const token = generateToken(user);
-
+      req.loggedIn = true;
+  
       res.status(200).json({message: {
         user: `Welcome ${user.username}`,
         pass: `${user.password}`,
         token
       }});
     }
-  })
+  });
 });
 
 module.exports = router;
