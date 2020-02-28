@@ -4,7 +4,6 @@ const generateToken = require('./auth-token');
 const router = require('express').Router();
 
 router.get('/', (req, res) => {
-  console.log(req.session);
   Users.find()
   .then(user => {
     res.status(200).json(user);
